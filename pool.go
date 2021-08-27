@@ -39,6 +39,10 @@ func GeneratePool(gFile *protogen.GeneratedFile, message *protogen.Message) {
 		objectName: LcFirst(message.GoIdent.GoName),
 		poolName:   LcFirst(message.GoIdent.GoName) + "Pool",
 	}
+	gFile.QualifiedGoIdent(protogen.GoIdent{
+		"sync",
+		"sync",
+	})
 	genSyncPool(gFile, config)
 	genAcquire(gFile, config)
 	genRelease(gFile, config)

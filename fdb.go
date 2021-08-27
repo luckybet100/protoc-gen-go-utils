@@ -46,6 +46,14 @@ func GenFdbMethods(gFile *protogen.GeneratedFile, message *protogen.Message) {
 		"proto",
 		"google.golang.org/protobuf/proto",
 	})
+	gFile.QualifiedGoIdent(protogen.GoIdent{
+		"fdb",
+		"github.com/apple/foundationdb/bindings/go/src/fdb",
+	})
+	gFile.QualifiedGoIdent(protogen.GoIdent{
+		"subspace",
+		"github.com/apple/foundationdb/bindings/go/src/fdb/subspace",
+	})
 	genLoadFromFDB(gFile, config)
 	genStoreFDB(gFile, config)
 }
