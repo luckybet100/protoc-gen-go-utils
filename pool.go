@@ -28,7 +28,9 @@ func genAcquire(gFile *protogen.GeneratedFile, config genPoolConfig) {
 
 func genRelease(gFile *protogen.GeneratedFile, config genPoolConfig) {
 	gFile.P("func Release", config.structName, "(", config.objectName, " *", config.structName, ") {")
+	gFile.P("if ", config.objectName, "!= nil {")
 	gFile.P(config.poolName, ".Put(", config.objectName, ")")
+	gFile.P("}")
 	gFile.P("}")
 	gFile.P()
 }
