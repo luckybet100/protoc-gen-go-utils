@@ -33,6 +33,7 @@ func genMustLoadFromFDB(gFile *protogen.GeneratedFile, config genFDBConfig) {
 	gFile.P("}")
 	gFile.P(config.objectName, ":=", "Acquire", config.structName, "()")
 	gFile.P("if err := proto.Unmarshal(value,", config.objectName, "); err != nil {")
+	gFile.P("Release", config.structName, "(", config.objectName, ")")
 	gFile.P("panic(err)")
 	gFile.P("}")
 	gFile.P("return ", config.objectName, "")
