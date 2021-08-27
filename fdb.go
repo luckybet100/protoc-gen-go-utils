@@ -84,7 +84,7 @@ func genRangeFDB(gFile *protogen.GeneratedFile, config genFDBConfig) {
 }
 
 func genMustRangeFDB(gFile *protogen.GeneratedFile, config genFDBConfig) {
-	gFile.P("func MustGetRange", config.structName, "FDB(tr fdb.ReadTransaction, rng fdb.Range, opts fdb.RangeOptions) ([]*", config.structName, ", error) {")
+	gFile.P("func MustGetRange", config.structName, "FDB(tr fdb.ReadTransaction, rng fdb.Range, opts fdb.RangeOptions) []*", config.structName, " {")
 	gFile.P("iter := tr.GetRange(rng, opts).Iterator()")
 	gFile.P("result := make([]*", config.structName, ", 0, opts.Limit)")
 	gFile.P("for iter.Advance() {")
@@ -96,7 +96,7 @@ func genMustRangeFDB(gFile *protogen.GeneratedFile, config genFDBConfig) {
 	gFile.P("}")
 	gFile.P("result = append(result, ", config.objectName, ")")
 	gFile.P("}")
-	gFile.P("return result, nil")
+	gFile.P("return result")
 	gFile.P("}")
 	gFile.P()
 }
