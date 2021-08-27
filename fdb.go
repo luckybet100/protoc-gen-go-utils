@@ -62,6 +62,45 @@ func genMustStoreFDB(gFile *protogen.GeneratedFile, config genFDBConfig) {
 	gFile.P()
 }
 
+func genRangeFDB(gFile *protogen.GeneratedFile, config genFDBConfig) {
+	gFile.P("func GetRange", config.structName, "FDB(tr fdb.ReadTransaction, rng fdb.Range, opts fdb.RangeOptions) ([]*", config.structName, ", error) {")
+	gFile.P("iter := tr.GetRange(rng, opts).Iterator()")
+	gFile.P("result := make([]*", config.structName, ", 0, opts.Limit)")
+	gFile.P("for iter.Advance() {")
+	gFile.P("kv, err := iter.Get()")
+	gFile.P("if err != nil {")
+	gFile.P("return nil, err")
+	gFile.P("}")
+	gFile.P(config.objectName, ":=Acquire", config.structName, "()")
+	gFile.P("err = proto.Unmarshal(kv.Value, ", config.objectName, ")")
+	gFile.P("if err != nil {")
+	gFile.P("return nil, err")
+	gFile.P("}")
+	gFile.P("result = append(result, ", config.objectName, ")")
+	gFile.P("}")
+	gFile.P("return result, nil")
+	gFile.P("}")
+	gFile.P()
+}
+
+func genMustRangeFDB(gFile *protogen.GeneratedFile, config genFDBConfig) {
+	gFile.P("func MustGetRange", config.structName, "FDB(tr fdb.ReadTransaction, rng fdb.Range, opts fdb.RangeOptions) ([]*", config.structName, ", error) {")
+	gFile.P("iter := tr.GetRange(rng, opts).Iterator()")
+	gFile.P("result := make([]*", config.structName, ", 0, opts.Limit)")
+	gFile.P("for iter.Advance() {")
+	gFile.P("kv := iter.MustGet()")
+	gFile.P(config.objectName, ":=Acquire", config.structName, "()")
+	gFile.P("err := proto.Unmarshal(kv.Value, ", config.objectName, ")")
+	gFile.P("if err != nil {")
+	gFile.P("panic(err)")
+	gFile.P("}")
+	gFile.P("result = append(result, ", config.objectName, ")")
+	gFile.P("}")
+	gFile.P("return result, nil")
+	gFile.P("}")
+	gFile.P()
+}
+
 func GenFdbMethods(gFile *protogen.GeneratedFile, message *protogen.Message) {
 	config := genFDBConfig{
 		structName: message.GoIdent.GoName,
@@ -83,4 +122,6 @@ func GenFdbMethods(gFile *protogen.GeneratedFile, message *protogen.Message) {
 	genMustLoadFromFDB(gFile, config)
 	genStoreFDB(gFile, config)
 	genMustStoreFDB(gFile, config)
+	genRangeFDB(gFile, config)
+	genMustRangeFDB(gFile, config)
 }
