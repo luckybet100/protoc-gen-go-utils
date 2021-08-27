@@ -1,0 +1,4 @@
+*.pb.go
+*.pb.utils.go
+bin
+protoc-gen-go-utils
