@@ -25,7 +25,7 @@ func genAcquire(gFile *protogen.GeneratedFile, config genPoolConfig) {
 	gFile.P("runtime.SetFinalizer(", config.objectName, ", func (", config.objectName, " *", config.structName, ") {")
 	gFile.P("Release", config.structName, "(", config.objectName, ")")
 	gFile.P("})")
-	gFile.P("return ", config.poolName, ".Get().(*", config.structName, ")")
+	gFile.P("return ", config.objectName)
 	gFile.P("}")
 	gFile.P()
 }
